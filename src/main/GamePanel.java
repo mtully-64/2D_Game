@@ -18,6 +18,9 @@ public class GamePanel extends JPanel implements Runnable{
     final int screenWidth = tileSize * maxScreenCol; // 16x48 = 768 pixels
     final int screenHeight = tileSize * maxScreenRow; //12x48 = 576 pixels
 
+    // FPS setting to 60 FPS
+    int FPS = 60;
+
     //we need to instantiate the key handler
     KeyHandler keyH = new KeyHandler();
 
@@ -55,6 +58,11 @@ public class GamePanel extends JPanel implements Runnable{
     //this run method will contain the core running of the game, it will hold the game loop
     @Override
     public void run(){
+
+        // This is for the draw interval: 1 million divided by 1 billion nano seconds -> 0.01667 seconds
+        double drawInterval = 1000000000/FPS;
+        double nextDrawTime = System.nanoTime() + drawInterval;
+
         //as long as the gameThread exists, this process is repeated forever
         while(gameThread != null){
 
@@ -66,6 +74,27 @@ public class GamePanel extends JPanel implements Runnable{
             //2. Redraw the screen
             //redrawing the screen 60 times per second, is 60 FPS
             repaint(); //this is how you call the 'paintComponent' method
+
+            // Check to see the remaining time when finished redraw
+            // Then for this remaining time we will sleep
+            // The Thread.sleep() requires a try-catch
+            try {
+                // Needs to be converted from nano to milli
+                double remainingTime = nextDrawTime - System.nanoTime();
+                remainingTime = remainingTime/1000000;
+
+                // This shouldn't happen but just incase
+                if (remainingTime < 0){
+                    remainingTime = 0;
+                }
+
+                Thread.sleep((long) remainingTime); //sleep only accepts long data type
+
+                nextDrawTime += drawInterval;
+
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -99,6 +128,5 @@ public class GamePanel extends JPanel implements Runnable{
 
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using
         g2.dispose();
-
     }
 }

@@ -21,5 +21,11 @@ public class Main {
         //set the window to the centre of the screen
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+        // Even though I have called 'setFocusable(true)', it is safe to include this
+        gamePanel.requestFocusInWindow();
+
+        // I have to "kick off the loop"
+        gamePanel.startGameThread();
     }
 }
