@@ -1,5 +1,6 @@
 package main;
 
+import entity.Player;
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,7 +10,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     //now I have to scale the 16x16 tile to fit today's monitor/screen size (16 is based on SEGA architecture)
     final int scale = 3; //set the scale to be 3 times bigger... 3x16 = 48 (a common for game dev)
-    final int tileSize = originalTileSize * scale; //48x48 tile
+    public final int tileSize = originalTileSize * scale; //48x48 tile
 
     //now we have to how many tiles can be displayed on a single screen
     final int maxScreenCol = 16; //max titles on x-axis is 16
@@ -28,10 +29,8 @@ public class GamePanel extends JPanel implements Runnable{
     //hence, we use a 'Thread'
     Thread gameThread; //a thread that you can start and stop
 
-    //set player's default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
+    // Instantiate the player
+    Player player = new Player(this, keyH);
 
     public GamePanel(){
         //set the size of the class 'JPanel'
@@ -59,15 +58,12 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run(){
 
-        // This is for the draw interval: 1 million divided by 1 billion nano seconds -> 0.01667 seconds
-        double drawInterval = 1000000000/FPS;
+        // This is for the draw interval: 1 billion "nanoseconds" divided by 60 FPS -> 0.01667 seconds
+        double drawInterval = (double) 1000000000/FPS;
         double nextDrawTime = System.nanoTime() + drawInterval;
 
         //as long as the gameThread exists, this process is repeated forever
         while(gameThread != null){
-
-            // To check the current time while the game runs
-            long currentTime = System.nanoTime();
 
             //1. We have to update the information, such as character positioning
             update();
@@ -83,13 +79,14 @@ public class GamePanel extends JPanel implements Runnable{
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime = remainingTime/1000000;
 
-                // This shouldn't happen but just incase
+                // This shouldn't happen but just in case we take longer to paint then the period
                 if (remainingTime < 0){
                     remainingTime = 0;
                 }
 
                 Thread.sleep((long) remainingTime); //sleep only accepts long data type
 
+                // Now we refresh the next draw time
                 nextDrawTime += drawInterval;
 
             } catch (InterruptedException e) {
@@ -99,19 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(){
-        //update player position
-        if(keyH.upPressed){
-            playerY -= playerSpeed;
-        }
-        if(keyH.downPressed){
-            playerY += playerSpeed;
-        }
-        if(keyH.leftPressed){
-            playerX -= playerSpeed;
-        }
-        if(keyH.rightPressed){
-            playerX += playerSpeed;
-        }
+        player.update();
     }
 
     //method used to redraw onto the screen
@@ -122,9 +107,7 @@ public class GamePanel extends JPanel implements Runnable{
         /*This provides a more sophisticated control over geometry, coordinate transformations, color management and text layout*/
         Graphics2D g2 = (Graphics2D) g; //here we do type conversion
 
-        //draw the player
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, tileSize, tileSize); //starting at (100, 100) and is just a white shape
+        player.draw(g2);
 
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using
         g2.dispose();
