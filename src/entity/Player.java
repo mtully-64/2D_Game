@@ -3,7 +3,10 @@ package entity;
 import main.GamePanel;
 import main.KeyHandler;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Player extends Entity{
     GamePanel gp;
@@ -14,6 +17,7 @@ public class Player extends Entity{
         this.keyH = keyH;
 
         setDefaultValues();
+        getPlayerImage();
     }
 
     // Method to set the player's default values
@@ -21,28 +25,101 @@ public class Player extends Entity{
         x = 100;
         y = 100;
         speed = 4;
+        direction = "down";
     }
 
+    // Method to load in images of player walking (the sprite)
+    public void getPlayerImage(){
+        try{
+            up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_2.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_2.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_2.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_2.png"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 
     public void update(){
-        //update player position
-        if(keyH.upPressed){
-            y -= speed;
-        }
-        if(keyH.downPressed){
-            y += speed;
-        }
-        if(keyH.leftPressed){
-            x -= speed;
-        }
-        if(keyH.rightPressed){
-            x += speed;
+
+        // Statement to stop the sprite moving between png 1 and 2, when not moving
+        if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){
+
+            // Update player position
+            if(keyH.upPressed){
+                direction = "up";
+                y -= speed;
+            }
+            if(keyH.downPressed){
+                direction = "down";
+                y += speed;
+            }
+            if(keyH.leftPressed){
+                direction = "left";
+                x -= speed;
+            }
+            if(keyH.rightPressed){
+                direction = "right";
+                x += speed;
+            }
+
+            // This is to alternate the walking of the player
+            spriteCounter++;
+            if(spriteCounter > 12){ // This means that the player image changes in every 12 frames (remember we do 60 Frames Per Second)
+                if(spriteNum == 1){
+                    spriteNum = 2;
+                } else if (spriteNum == 2) {
+                    spriteNum = 1;
+                }
+                spriteCounter = 0;
+            }
         }
     }
-    public void draw(Graphics2D g2){
 
-        //draw the player
-        g2.setColor(Color.white);
-        g2.fillRect(x, y, gp.tileSize, gp.tileSize); //starting at (100, 100) and is just a white shape
+    // This method will be used to draw the player's sprite on the screen
+    public void draw(Graphics2D g2){
+        BufferedImage image = null;
+
+        // Show the player's image based on the intended direction that they are facing
+        switch(direction){
+            case "up":
+                if(spriteNum == 1){
+                    image = up1;
+                } else if (spriteNum == 2) {
+                    image = up2;
+                }
+                break;
+
+            case "down":
+                if(spriteNum == 1){
+                    image = down1;
+                } else if (spriteNum == 2) {
+                    image = down2;
+                }
+                break;
+
+            case "left":
+                if(spriteNum == 1){
+                    image = left1;
+                } else if (spriteNum == 2) {
+                    image = left2;
+                }
+                break;
+
+            case "right":
+                if(spriteNum == 1){
+                    image = right1;
+                } else if (spriteNum == 2) {
+                    image = right2;
+                }
+                break;
+        }
+
+        // Draw the image to the screen
+        g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null); // The image observer is null
     }
 }
