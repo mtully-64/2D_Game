@@ -1,6 +1,8 @@
 package main;
 
 import entity.Player;
+import tile.TileManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,20 +15,23 @@ public class GamePanel extends JPanel implements Runnable{
     public final int tileSize = originalTileSize * scale; //48x48 tile
 
     //now we have to how many tiles can be displayed on a single screen
-    final int maxScreenCol = 16; //max titles on x-axis is 16
-    final int maxScreenRow = 12; //max titles on y-axis is 12
+    public final int maxScreenCol = 16; //max titles on x-axis is 16
+    public final int maxScreenRow = 12; //max titles on y-axis is 12
 
-    final int screenWidth = tileSize * maxScreenCol; // 16x48 = 768 pixels
-    final int screenHeight = tileSize * maxScreenRow; //12x48 = 576 pixels
+    public final int screenWidth = tileSize * maxScreenCol; // 16x48 = 768 pixels
+    public final int screenHeight = tileSize * maxScreenRow; //12x48 = 576 pixels
 
     // FPS setting to 60 FPS
     int FPS = 60;
 
-    //we need to instantiate the key handler
+    // We need to instantiate the tile manager
+    TileManager tileM = new TileManager(this);
+
+    // We need to instantiate the key handler
     KeyHandler keyH = new KeyHandler();
 
-    //we need time for the game to be run, allowing us to make a refresh rate etc.
-    //hence, we use a 'Thread'
+    // We need time for the game to be run, allowing us to make a refresh rate etc.
+    // Hence, we use a 'Thread'
     Thread gameThread; //a thread that you can start and stop
 
     // Instantiate the player
@@ -67,6 +72,7 @@ public class GamePanel extends JPanel implements Runnable{
 
             //1. We have to update the information, such as character positioning
             update();
+            
             //2. Redraw the screen
             //redrawing the screen 60 times per second, is 60 FPS
             repaint(); //this is how you call the 'paintComponent' method
@@ -107,6 +113,7 @@ public class GamePanel extends JPanel implements Runnable{
         /*This provides a more sophisticated control over geometry, coordinate transformations, color management and text layout*/
         Graphics2D g2 = (Graphics2D) g; //here we do type conversion
 
+        tileM.draw(g2); // Always draw the tile first, then the player
         player.draw(g2);
 
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using

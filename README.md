@@ -16,8 +16,8 @@ This project showcases a custom-built game engine, performance, modularity and c
 2D-Game/
 ├── Documents/        # Project documentation
 │   └── RoadMap.md    # Feature plans and development goals
-├── src/             # Java source code
-├── res/             # All resources (sprites, sounds, levels)
-├── .gitignore       # Git ignore rules
-└── README.md        # Current file!
+├── src/              # All source code
+├── res/              # All resources (sprites, sounds, levels)
+├── .gitignore        # Git ignore rules
+└── README.md         # Current file!
 ```
