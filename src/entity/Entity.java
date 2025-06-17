@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 public class Entity {
 
     // Location and speed information about the character
-    public int x, y;
+    public int worldX, worldY;
     public int speed;
 
     // A BufferedImage describes an Image with an accessible buffer of image data
