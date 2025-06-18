@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Entity {
@@ -17,5 +18,9 @@ public class Entity {
     // Therefore, we make a counter and record of which to use
     public int spriteCounter = 0;
     public int spriteNum = 1;
+
+    // Setting the solid area of the sprite that actually does collision with tiles/objects
+    public Rectangle solidArea;
+    public boolean collisionOn = false;
 
 }

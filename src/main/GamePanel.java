@@ -40,6 +40,9 @@ public class GamePanel extends JPanel implements Runnable{
     // Hence, we use a 'Thread'
     Thread gameThread; //a thread that you can start and stop
 
+    // Instantiate the idea of collision of objects with NPCs, Characters etc
+    public CollisionChecker cChecker = new CollisionChecker(this);
+
     // Instantiate the player
     public Player player = new Player(this, keyH);
 

@@ -12,9 +12,9 @@ import java.io.InputStreamReader;
 public class TileManager {
 
     GamePanel gp;
-    Tile[] tile;
+    public Tile[] tile;
     // We have to load in the map through a txt file
-    int[][] mapTileNum;
+    public int[][] mapTileNum;
 
     public TileManager(GamePanel gp){
         this.gp = gp;
@@ -39,10 +39,12 @@ public class TileManager {
             // Load in the second tile as wall
             tile[1] = new Tile();
             tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/wall.png"));
+            tile[1].collision = true;
 
             // Load in the third tile as water
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/water.png"));
+            tile[2].collision = true;
 
             // Load in the 4th tile as earth
             tile[3] = new Tile();
@@ -51,6 +53,7 @@ public class TileManager {
             // Load in the 5th tile as tree
             tile[4] = new Tile();
             tile[4].image = ImageIO.read(getClass().getResourceAsStream("/tiles/tree.png"));
+            tile[4].collision = true;
 
             // Load in the 6th tile as sand
             tile[5] = new Tile();
@@ -75,7 +78,7 @@ public class TileManager {
                 String line = br.readLine(); // This does a whole line of the txt at once
 
                 while(col<gp.maxWorldCol){
-                    String numbers[] = line.split(" ");
+                    String[] numbers = line.split(" ");
 
                     int num = Integer.parseInt(numbers[col]);
 
