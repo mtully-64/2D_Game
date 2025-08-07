@@ -25,6 +25,9 @@ public class Main {
         // Even though I have called 'setFocusable(true)', it is safe to include this
         gamePanel.requestFocusInWindow();
 
+        // I need to set up all assets/objects in the game
+        gamePanel.setupGame();
+
         // I have to "kick off the loop"
         gamePanel.startGameThread();
     }

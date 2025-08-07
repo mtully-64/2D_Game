@@ -21,6 +21,7 @@ public class Entity {
 
     // Setting the solid area of the sprite that actually does collision with tiles/objects
     public Rectangle solidArea;
+    public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
 
 }

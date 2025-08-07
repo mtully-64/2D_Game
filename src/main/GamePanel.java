@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
@@ -43,8 +44,14 @@ public class GamePanel extends JPanel implements Runnable{
     // Instantiate the idea of collision of objects with NPCs, Characters etc
     public CollisionChecker cChecker = new CollisionChecker(this);
 
+    // Include the assets/objects
+    public AssetSetter aSetter = new AssetSetter(this);
+
     // Instantiate the player
     public Player player = new Player(this, keyH);
+
+    // Instantiate objects like keys etc., too many objects can slow down the game
+    public SuperObject obj[] = new SuperObject[10];
 
     public GamePanel(){
         //set the size of the class 'JPanel'
@@ -58,6 +65,10 @@ public class GamePanel extends JPanel implements Runnable{
         //add key handler to game panel
         this.addKeyListener(keyH);
         this.setFocusable(true);
+    }
+
+    public void setupGame(){
+        aSetter.setObject();
     }
 
     //the 'run' method is overwritten from the interface 'Runnable'
@@ -122,7 +133,17 @@ public class GamePanel extends JPanel implements Runnable{
         /*This provides a more sophisticated control over geometry, coordinate transformations, color management and text layout*/
         Graphics2D g2 = (Graphics2D) g; //here we do type conversion
 
+        // Tile draw
         tileM.draw(g2); // Always draw the tile first, then the player
+
+        // Object draw
+        for(int i = 0; i < obj.length; i++){
+            if(obj[i] != null){ // This prevents a null pointer error
+                obj[i].draw(g2, this);
+            }
+        }
+
+        // Player draw
         player.draw(g2);
 
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using
