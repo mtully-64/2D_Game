@@ -8,28 +8,47 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable{
-    // Screen Settings
+    /*
+    ********************************
+    * SCREEN SETTINGS
+    ********************************
+     */
+
+    // Tile size settings
     final int originalTileSize = 16; //this is 16x16 tile
 
-    //now I have to scale the 16x16 tile to fit today's monitor/screen size (16 is based on SEGA architecture)
+    // Now I have to scale the 16x16 tile to fit today's monitor/screen size (16 is based on SEGA architecture)
     final int scale = 3; //set the scale to be 3 times bigger... 3x16 = 48 (a common for game dev)
     public final int tileSize = originalTileSize * scale; //48x48 tile
 
-    //now we have to how many tiles can be displayed on a single screen
+    // Now we have to how many tiles can be displayed on a single screen
     public final int maxScreenCol = 16; //max titles on x-axis is 16
     public final int maxScreenRow = 12; //max titles on y-axis is 12
 
     public final int screenWidth = tileSize * maxScreenCol; // 16x48 = 768 pixels
     public final int screenHeight = tileSize * maxScreenRow; //12x48 = 576 pixels
 
-    // World Settings
+    /*
+     ********************************
+     * WORLD SETTINGS
+     ********************************
+     */
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
-    public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow;
 
+    /*
+     ********************************
+     * FPS SETTINGS
+     ********************************
+     */
     // FPS setting to 60 FPS
     int FPS = 60;
+
+    /*
+     ********************************
+     * SYSTEM
+     ********************************
+     */
 
     // We need to instantiate the tile manager
     TileManager tileM = new TileManager(this);
@@ -37,9 +56,9 @@ public class GamePanel extends JPanel implements Runnable{
     // We need to instantiate the key handler
     KeyHandler keyH = new KeyHandler();
 
-    // We need time for the game to be run, allowing us to make a refresh rate etc.
-    // Hence, we use a 'Thread'
-    Thread gameThread; //a thread that you can start and stop
+    // Instantiate sounds into the game
+    Sound music = new Sound();
+    Sound sound_effects = new Sound();
 
     // Instantiate the idea of collision of objects with NPCs, Characters etc
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -47,6 +66,18 @@ public class GamePanel extends JPanel implements Runnable{
     // Include the assets/objects
     public AssetSetter aSetter = new AssetSetter(this);
 
+    // Instantiate in the UI of the game
+    public UI ui = new UI(this);
+
+    // We need time for the game to be run, allowing us to make a refresh rate etc.
+    // Hence, we use a 'Thread'
+    Thread gameThread; //a thread that you can start and stop
+
+    /*
+     ********************************
+     * ENTITY AND OBJECT
+     ********************************
+     */
     // Instantiate the player
     public Player player = new Player(this, keyH);
 
@@ -69,6 +100,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void setupGame(){
         aSetter.setObject();
+        playMusic(0);
     }
 
     //the 'run' method is overwritten from the interface 'Runnable'
@@ -125,7 +157,7 @@ public class GamePanel extends JPanel implements Runnable{
         player.update();
     }
 
-    //method used to redraw onto the screen
+    // Method used to redraw onto the screen
     public void paintComponent(Graphics g){
         super.paintComponent(g);
 
@@ -146,7 +178,31 @@ public class GamePanel extends JPanel implements Runnable{
         // Player draw
         player.draw(g2);
 
+        // UI draw
+        ui.draw(g2);
+
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using
         g2.dispose();
+    }
+
+    /*
+     ********************************
+     * MUSIC
+     ********************************
+     */
+
+    public void playMusic(int i){
+        music.setFile(i);
+        music.play();
+        music.loop();
+    }
+
+    public void stopMusic(){
+        music.stop();
+    }
+
+    public void playSE(int i){
+        sound_effects.setFile(i);
+        sound_effects.play();
     }
 }
