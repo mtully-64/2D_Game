@@ -19,8 +19,8 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
 
-    // Indicate how many keys that the player currently has
-    public int hasKey = 0;
+    // Fixing the character standing bug
+    int standCounter = 0;
 
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
@@ -135,42 +135,21 @@ public class Player extends Entity{
                 spriteCounter = 0;
             }
         }
+        else{
+            standCounter++;
+
+            // Making sure there is always a 20 frames time buffer
+            if(standCounter == 20){
+                spriteNum = 1;
+                standCounter = 0;
+            }
+        }
     }
 
     // This is the method to pick up an object (object interaction)
     public void pickUpObject(int i){
         if(i != 999){ // If an object is not touched, 999 is a random number thats outside of the index
-            String objectName = gp.obj[i].name;
 
-            switch(objectName){
-                case "Key":
-                    gp.playSE(1);
-                    hasKey++;
-                    gp.obj[i] = null;
-                    gp.ui.showMessage("You got a key!");
-                    break;
-                case "Door":
-                    gp.playSE(3);
-                    if(hasKey > 0){
-                        gp.obj[i] = null;
-                        hasKey--;
-                        gp.ui.showMessage("You opened the door!");
-                    } else{
-                        gp.ui.showMessage("You need a key!");
-                    }
-                    break;
-                case "Boots":
-                    gp.playSE(2);
-                    speed += 2; // Increase the speed of the player when he interacts with the boots
-                    gp.obj[i] = null;
-                    gp.ui.showMessage("Speed up!");
-                    break;
-                case "Chest":
-                    gp.ui.gameFinished = true;
-                    gp.stopMusic();
-                    gp.playSE(4);
-                    break;
-            }
         }
     }
 

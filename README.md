@@ -21,3 +21,8 @@ This project showcases a custom-built game engine, performance, modularity and c
 ├── .gitignore        # Git ignore rules
 └── README.md         # Current file!
 ```
+
+### Credits
+This game is based on the Java tutorial by RyiSnow.
+
+Modifications, additional features, and adaptations are my own work.

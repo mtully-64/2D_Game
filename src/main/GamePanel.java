@@ -54,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
     TileManager tileM = new TileManager(this);
 
     // We need to instantiate the key handler
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
 
     // Instantiate sounds into the game
     Sound music = new Sound();
@@ -84,6 +84,16 @@ public class GamePanel extends JPanel implements Runnable{
     // Instantiate objects like keys etc., too many objects can slow down the game
     public SuperObject obj[] = new SuperObject[10];
 
+    /*
+     ********************************
+     * GAME STATE
+     ********************************
+     */
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
+
+
     public GamePanel(){
         //set the size of the class 'JPanel'
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -101,6 +111,8 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
         aSetter.setObject();
         playMusic(0);
+        stopMusic();
+        gameState = playState;
     }
 
     //the 'run' method is overwritten from the interface 'Runnable'
@@ -154,7 +166,12 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update(){
-        player.update();
+        if(gameState == playState) {
+            player.update();
+        }
+        if(gameState == pauseState){
+
+        }
     }
 
     // Method used to redraw onto the screen
@@ -164,6 +181,12 @@ public class GamePanel extends JPanel implements Runnable{
         //now we call the class 'Graphics2D' class, extending the Graphics class
         /*This provides a more sophisticated control over geometry, coordinate transformations, color management and text layout*/
         Graphics2D g2 = (Graphics2D) g; //here we do type conversion
+
+        // Showcase nerd stats just like Minecraft, when hit the F3 button
+        long drawStart = 0 ;
+        if(keyH.checkNerdStats){
+            drawStart = System.nanoTime();
+        }
 
         // Tile draw
         tileM.draw(g2); // Always draw the tile first, then the player
@@ -181,6 +204,13 @@ public class GamePanel extends JPanel implements Runnable{
         // UI draw
         ui.draw(g2);
 
+        // Used for nerd stats
+        if(keyH.checkNerdStats) {
+            long drawEnd = System.nanoTime();
+            long passed = drawEnd - drawStart;
+            g2.setColor(Color.white);
+            g2.drawString("Draw Time: " + passed, 10, 400);
+        }
         //the 'dispose' method is used to dispose of this graphics context and release any system resources that it is using
         g2.dispose();
     }
