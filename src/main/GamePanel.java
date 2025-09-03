@@ -1,5 +1,6 @@
 package main;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -84,6 +85,9 @@ public class GamePanel extends JPanel implements Runnable{
     // Instantiate objects like keys etc., too many objects can slow down the game
     public SuperObject obj[] = new SuperObject[10];
 
+    // Now we will instantiate the image array of the NPCs for the game
+    public Entity[] npc = new Entity[10];
+
     /*
      ********************************
      * GAME STATE
@@ -110,8 +114,8 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void setupGame(){
         aSetter.setObject();
+        aSetter.setNPC();
         playMusic(0);
-        stopMusic();
         gameState = playState;
     }
 
@@ -167,10 +171,17 @@ public class GamePanel extends JPanel implements Runnable{
 
     public void update(){
         if(gameState == playState) {
+            // Player
             player.update();
+            // NPC
+            for(int i = 0; i < npc.length; i++){
+                if(npc[i] != null){
+                    npc[i].update();
+                }
+            }
         }
         if(gameState == pauseState){
-
+            // in progress atm!
         }
     }
 
@@ -195,6 +206,13 @@ public class GamePanel extends JPanel implements Runnable{
         for(int i = 0; i < obj.length; i++){
             if(obj[i] != null){ // This prevents a null pointer error
                 obj[i].draw(g2, this);
+            }
+        }
+
+        // NPC draw
+        for(int i = 0; i < npc.length; i++){
+            if(npc[i] != null){
+                npc[i].draw(g2);
             }
         }
 

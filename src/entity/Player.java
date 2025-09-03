@@ -23,6 +23,9 @@ public class Player extends Entity{
     int standCounter = 0;
 
     public Player(GamePanel gp, KeyHandler keyH){
+        // Call the constructor of the super class into the class
+        super(gp);
+
         this.gp = gp;
         this.keyH = keyH;
 
@@ -53,27 +56,14 @@ public class Player extends Entity{
 
     // Method to load in images of player walking (the sprite)
     public void getPlayerImage(){
-        up1 = setup("boy_up_1");
-        up2 = setup("boy_up_2");
-        down1 = setup("boy_down_1");
-        down2 = setup("boy_down_2");
-        left1 = setup("boy_left_1");
-        left2 = setup("boy_left_2");
-        right1 = setup("boy_right_1");
-        right2 = setup("boy_right_2");
-    }
-
-    public BufferedImage setup(String imageName){
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
-
-        try{
-            image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-        return image;
+        up1 = setup("/player/boy_up_1");
+        up2 = setup("/player/boy_up_2");
+        down1 = setup("/player/boy_down_1");
+        down2 = setup("/player/boy_down_2");
+        left1 = setup("/player/boy_left_1");
+        left2 = setup("/player/boy_left_2");
+        right1 = setup("/player/boy_right_1");
+        right2 = setup("/player/boy_right_2");
     }
 
     public void update(){
@@ -102,6 +92,10 @@ public class Player extends Entity{
             // Check object collision (pass the player and pass the bool of true)
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
+
+            // Checking NPC collision
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            interactNPC(npcIndex);
 
             // If the collision is false, the player can move
             if(!collisionOn) {
@@ -150,6 +144,13 @@ public class Player extends Entity{
     public void pickUpObject(int i){
         if(i != 999){ // If an object is not touched, 999 is a random number thats outside of the index
 
+        }
+    }
+
+    // Method to handle the interaction of the player with an NPC or Monster (like to start dialog etc.)
+    public void interactNPC(int i){
+        if(i != 999){
+            System.out.println("You are hitting an NPC!");
         }
     }
 
