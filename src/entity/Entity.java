@@ -34,6 +34,11 @@ public class Entity {
     // Integer to slow down the direction change of the NPC
     public int actionLockCounter = 0;
 
+    // Array for string dialogues
+    String[] dialogues = new String[20];
+
+    int dialogueIndex = 0;
+
     public Entity(GamePanel gp){
         // This is an abstract class, received from the Player class
         this.gp = gp;
@@ -41,6 +46,31 @@ public class Entity {
 
     // Carried via inheritance in Java
     public void setAction(){}
+
+    public void speak(){
+        // Loop through a dialogue string list
+        if(dialogues[dialogueIndex] == null) {
+            dialogueIndex = 0;
+        }
+        gp.ui.currentDialogue = dialogues[dialogueIndex];
+        dialogueIndex++;
+
+        // I have to make sure the NPC is always looking at you when in dialogue
+        switch(gp.player.direction){
+            case "up":
+                direction = "down";
+                break;
+            case "down":
+                direction = "up";
+                break;
+            case "left":
+                direction = "right";
+                break;
+            case "right":
+                direction = "left";
+                break;
+        }
+    }
 
     public void update(){
         setAction();

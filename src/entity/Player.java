@@ -150,8 +150,13 @@ public class Player extends Entity{
     // Method to handle the interaction of the player with an NPC or Monster (like to start dialog etc.)
     public void interactNPC(int i){
         if(i != 999){
-            System.out.println("You are hitting an NPC!");
+            // Only open the dialogue window when you press the Enter key
+            if(gp.keyH.enterPressed == true){
+                gp.gameState = gp.dialogueState;
+                gp.npc[i].speak();
+            }
         }
+        gp.keyH.enterPressed = false;
     }
 
     // This method will be used to draw the player's sprite on the screen

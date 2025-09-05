@@ -13,6 +13,7 @@ public class NPC_OldMan extends Entity{
         speed = 1;
 
         getImage();
+        setDialogue();
     }
 
     // Method to load in images of player walking (the sprite)
@@ -25,6 +26,13 @@ public class NPC_OldMan extends Entity{
         left2 = setup("/npc/oldman_left_2");
         right1 = setup("/npc/oldman_right_1");
         right2 = setup("/npc/oldman_right_2");
+    }
+
+    public void setDialogue(){
+        dialogues[0] = "Hello, lad.";
+        dialogues[1] = "So you have come to this island \nto find the treasure?";
+        dialogues[2] = "I used to be a great wizard, \nbut my days have long passed.";
+        dialogues[3] = "Well good luck!";
     }
 
     // We set the characters behaviour (like AI), where each characters behaviour can be over-ridden
@@ -53,5 +61,9 @@ public class NPC_OldMan extends Entity{
 
             actionLockCounter = 0;
         }
+    }
+
+    public void speak(){
+        super.speak();
     }
 }

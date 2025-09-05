@@ -7,7 +7,7 @@ public class KeyHandler implements KeyListener {
 
     GamePanel gp;
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, enterPressed;
     public boolean checkNerdStats = false;
 
     public KeyHandler(GamePanel gp){
@@ -24,32 +24,49 @@ public class KeyHandler implements KeyListener {
         //i.e. 8 is Backspace, 10 is Enter, 65 is A
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_W){
-            upPressed = true;
-        }
-        if(code == KeyEvent.VK_S){
-            downPressed = true;
-        }
-        if(code == KeyEvent.VK_A){
-            leftPressed = true;
-        }
-        if(code == KeyEvent.VK_D){
-            rightPressed = true;
-        }
-        if(code == KeyEvent.VK_P){
-            if(gp.gameState == gp.playState){
+        if(gp.gameState == gp.playState){
+
+            // Play State
+            if(code == KeyEvent.VK_W){
+                upPressed = true;
+            }
+            if(code == KeyEvent.VK_S){
+                downPressed = true;
+            }
+            if(code == KeyEvent.VK_A){
+                leftPressed = true;
+            }
+            if(code == KeyEvent.VK_D){
+                rightPressed = true;
+            }
+            if(code == KeyEvent.VK_P){
                 gp.gameState = gp.pauseState;
-            } else if(gp.gameState == gp.pauseState){
+            }
+            if(code == KeyEvent.VK_ENTER){
+                enterPressed = true;
+            }
+        }
+
+            // Youtube version of "Stats for Nerds"
+            if(code == KeyEvent.VK_T){
+                if(!checkNerdStats){
+                    checkNerdStats = true;
+                } else if (checkNerdStats) {
+                    checkNerdStats = false;
+                }
+            }
+
+        // Pause state
+        else if(gp.gameState == gp.pauseState){
+            if(code == KeyEvent.VK_P){
                 gp.gameState = gp.playState;
             }
         }
 
-        // Youtube version of "Stats for Nerds"
-        if(code == KeyEvent.VK_T){
-            if(!checkNerdStats){
-                checkNerdStats = true;
-            } else if (checkNerdStats) {
-                checkNerdStats = false;
+        // Dialogue state
+        else if(gp.gameState == gp.dialogueState){
+            if(code == KeyEvent.VK_ENTER){
+                gp.gameState = gp.playState;
             }
         }
     }
@@ -69,6 +86,9 @@ public class KeyHandler implements KeyListener {
         }
         if (code == KeyEvent.VK_D) {
             rightPressed = false;
+        }
+        if(code == KeyEvent.VK_ENTER){
+            enterPressed = false;
         }
     }
 }
