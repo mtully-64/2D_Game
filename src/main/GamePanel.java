@@ -94,6 +94,7 @@ public class GamePanel extends JPanel implements Runnable{
      ********************************
      */
     public int gameState;
+    public final int titleState = 0;
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
@@ -115,8 +116,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
-        playMusic(0);
-        gameState = playState;
+        gameState = titleState;
     }
 
     //the 'run' method is overwritten from the interface 'Runnable'
@@ -199,28 +199,37 @@ public class GamePanel extends JPanel implements Runnable{
             drawStart = System.nanoTime();
         }
 
-        // Tile draw
-        tileM.draw(g2); // Always draw the tile first, then the player
+        // Title Screen
+        if(gameState == titleState){
+            ui.draw(g2);
+        } // Others
+        else{
 
-        // Object draw
-        for(int i = 0; i < obj.length; i++){
-            if(obj[i] != null){ // This prevents a null pointer error
-                obj[i].draw(g2, this);
+            // Tile draw
+            tileM.draw(g2); // Always draw the tile first, then the player
+
+            // Object draw
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null){ // This prevents a null pointer error
+                    obj[i].draw(g2, this);
+                }
             }
+
+            // NPC draw
+            for(int i = 0; i < npc.length; i++){
+                if(npc[i] != null){
+                    npc[i].draw(g2);
+                }
+            }
+
+            // Player draw
+            player.draw(g2);
+
+            // UI draw
+            ui.draw(g2);
+
         }
 
-        // NPC draw
-        for(int i = 0; i < npc.length; i++){
-            if(npc[i] != null){
-                npc[i].draw(g2);
-            }
-        }
-
-        // Player draw
-        player.draw(g2);
-
-        // UI draw
-        ui.draw(g2);
 
         // Used for nerd stats
         if(keyH.checkNerdStats) {

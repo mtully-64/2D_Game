@@ -24,9 +24,42 @@ public class KeyHandler implements KeyListener {
         //i.e. 8 is Backspace, 10 is Enter, 65 is A
         int code = e.getKeyCode();
 
+        // Title State
+        if(gp.gameState == gp.titleState){
+            if(code == KeyEvent.VK_W){
+                gp.ui.commandNum--;
+                if(gp.ui.commandNum < 0){
+                    gp.ui.commandNum = 2;
+                }
+            }
+            if(code == KeyEvent.VK_S){
+                gp.ui.commandNum++;
+                if(gp.ui.commandNum > 2){
+                    gp.ui.commandNum = 0;
+                }
+            }
+            if(code == KeyEvent.VK_ENTER){
+                // New game
+                if(gp.ui.commandNum == 0){
+                    gp.gameState = gp.playState;
+                    gp.playMusic(0);
+                }
+
+                // Load game
+                if(gp.ui.commandNum == 1){
+                    // will add later
+                }
+
+                // Quit game
+                if(gp.ui.commandNum == 2){
+                    System.exit(0); // clean exit
+                }
+            }
+        }
+
+        // Play State
         if(gp.gameState == gp.playState){
 
-            // Play State
             if(code == KeyEvent.VK_W){
                 upPressed = true;
             }
