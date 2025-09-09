@@ -39,6 +39,10 @@ public class Entity {
 
     int dialogueIndex = 0;
 
+    // Character status - shared by both player and monsters
+    public int maxLife;
+    public int life;
+
     public Entity(GamePanel gp){
         // This is an abstract class, received from the Player class
         this.gp = gp;

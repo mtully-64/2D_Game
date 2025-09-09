@@ -52,6 +52,10 @@ public class Player extends Entity{
         worldY = gp.tileSize * 21; // Player's y position on the world map
         speed = 4;
         direction = "down";
+
+        // Player status
+        maxLife = 6; // 3 hearts is 6 lives, 1 life is half a heart
+        life = maxLife;
     }
 
     // Method to load in images of player walking (the sprite)
