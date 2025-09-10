@@ -29,7 +29,7 @@ public class TileManager {
 
         // Load in the tile images
         getTileImage();
-        loadMap("/maps/world02.txt");
+        loadMap("/maps/world03.txt");
     }
 
     // This method is to load in the tile images

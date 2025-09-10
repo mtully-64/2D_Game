@@ -101,6 +101,11 @@ public class Player extends Entity{
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
 
+            // Check the event
+            gp.eHandler.checkEvent();
+
+            gp.keyH.enterPressed = false;
+
             // If the collision is false, the player can move
             if(!collisionOn) {
                 switch(direction){
@@ -160,7 +165,6 @@ public class Player extends Entity{
                 gp.npc[i].speak();
             }
         }
-        gp.keyH.enterPressed = false;
     }
 
     // This method will be used to draw the player's sprite on the screen

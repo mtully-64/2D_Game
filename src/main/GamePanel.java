@@ -70,6 +70,8 @@ public class GamePanel extends JPanel implements Runnable{
     // Instantiate in the UI of the game
     public UI ui = new UI(this);
 
+    public EventHandler eHandler = new EventHandler(this);
+
     // We need time for the game to be run, allowing us to make a refresh rate etc.
     // Hence, we use a 'Thread'
     Thread gameThread; //a thread that you can start and stop

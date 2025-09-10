@@ -74,8 +74,6 @@ public class UI {
 
     public void drawPlayerLife(){
 
-        gp.player.life = 5;
-
         // Where I will display the heart image
         int x = gp.tileSize/2;
         int y = gp.tileSize/2;
