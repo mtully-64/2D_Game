@@ -3,14 +3,14 @@ This project is a creation of a 2D game in **Java**, with **no external librarie
 Using only pure Java features, this game was developed to enhance and explore the intricate/complex task of game development.
 This project showcases a custom-built game engine, performance, modularity and clarity of design. Overall, this will serve as both a playable game and a technical foundation for more advanced Java development.
 
-### Features
+## Features
 - Game loop architecture
 - Responsive input system
 - Collision detection and basic physics
 - Sprite management and animation
 - Scalable object-oriented design
 
-### Project Structure
+## Project Structure
 
 ```
 2D-Game/
@@ -21,3 +21,14 @@ This project showcases a custom-built game engine, performance, modularity and c
 ├── .gitignore        # Git ignore rules
 └── README.md         # Current file!
 ```
+
+## Game Screenshots
+
+### Title Screen
+![Title Screen](images/title_screen.png)
+
+### Player Movement and Health System
+![Player Moving and Health](images/player_moving_and_health.png)
+
+### NPC Dialogue System
+![NPC Dialogue](images/npc_dialogue.png)
