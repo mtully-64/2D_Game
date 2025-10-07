@@ -2,11 +2,13 @@ package main;
 
 import entity.Entity;
 import entity.Player;
-import object.SuperObject;
 import tile.TileManager;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class GamePanel extends JPanel implements Runnable{
     /*
@@ -85,10 +87,15 @@ public class GamePanel extends JPanel implements Runnable{
     public Player player = new Player(this, keyH);
 
     // Instantiate objects like keys etc., too many objects can slow down the game
-    public SuperObject obj[] = new SuperObject[10];
+    public Entity obj[] = new Entity[10];
 
     // Now we will instantiate the image array of the NPCs for the game
     public Entity[] npc = new Entity[10];
+
+    // Controlling of render order
+    // Array will be sorted by, the entity with the lowest worldY comes in index 0
+    // Then it will draw entities in order of their worldY value
+    ArrayList<Entity> entityList = new ArrayList<>();
 
     /*
      ********************************
@@ -210,22 +217,38 @@ public class GamePanel extends JPanel implements Runnable{
             // Tile draw
             tileM.draw(g2); // Always draw the tile first, then the player
 
-            // Object draw
-            for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null){ // This prevents a null pointer error
-                    obj[i].draw(g2, this);
-                }
-            }
-
-            // NPC draw
+            // All entities are put into list
+            entityList.add(player);
             for(int i = 0; i < npc.length; i++){
-                if(npc[i] != null){
-                    npc[i].draw(g2);
+                if (npc[i] != null){
+                    entityList.add(npc[i]);
                 }
             }
 
-            // Player draw
-            player.draw(g2);
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null){
+                    entityList.add(obj[i]);
+                }
+            }
+
+            // Now the array list is sorted
+            Collections.sort(entityList, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity e1, Entity e2) {
+                    int result = Integer.compare(e1.worldY, e2.worldY);
+                    return result;
+                }
+            });
+
+            // Draw entities
+            for(int i = 0; i < entityList.size(); i++){
+                entityList.get(i).draw(g2);
+            }
+
+            // Empty the entity list
+            for(int i = 0; i < entityList.size(); i++){
+                entityList.remove(i);
+            }
 
             // UI draw
             ui.draw(g2);

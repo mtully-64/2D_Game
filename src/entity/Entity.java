@@ -19,7 +19,7 @@ public class Entity {
     // A BufferedImage describes an Image with an accessible buffer of image data
     // We will use this to call our stored image files (player walking)
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-    public String direction;
+    public String direction = "down";
 
     // This is to make the sprite look as if he is walking (move from up1 to up2 etc.)
     // Therefore, we make a counter and record of which to use
@@ -38,6 +38,11 @@ public class Entity {
     String[] dialogues = new String[20];
 
     int dialogueIndex = 0;
+
+    // Entity parameters
+    public BufferedImage image, image2, image3;
+    public String name;
+    public boolean collision = false;
 
     // Character status - shared by both player and monsters
     public int maxLife;
