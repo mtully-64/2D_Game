@@ -101,6 +101,12 @@ public class Player extends Entity{
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
 
+            // Check Monster collision
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monster);
+            // Call a method to receive player damage when touch monster
+            contactMonster(monsterIndex);
+
+
             // Check the event
             gp.eHandler.checkEvent();
 
@@ -147,6 +153,14 @@ public class Player extends Entity{
                 standCounter = 0;
             }
         }
+
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 60){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     // This is the method to pick up an object (object interaction)
@@ -163,6 +177,16 @@ public class Player extends Entity{
             if(gp.keyH.enterPressed == true){
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
+            }
+        }
+    }
+
+    // Method to decrease player's health upon contact with a monster
+    public void contactMonster(int i){
+        if(i != 999){
+            if(invincible == false){
+                life -= 1;
+                invincible = true;
             }
         }
     }
@@ -206,7 +230,15 @@ public class Player extends Entity{
                 break;
         }
 
+        if(invincible == true){
+            // Make a player half transparent when he is "invincible" or just been hit
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        }
+
         // Draw the image to the screen
         g2.drawImage(image, screenX, screenY, null); // The image observer is null
+
+        // Now you have to reset the transparency
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // Without it fucked my UI text
     }
 }

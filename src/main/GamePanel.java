@@ -92,6 +92,9 @@ public class GamePanel extends JPanel implements Runnable{
     // Now we will instantiate the image array of the NPCs for the game
     public Entity[] npc = new Entity[10];
 
+    // Instantiating the monsters in the game - max is 20
+    public Entity monster[] = new Entity[20];
+
     // Controlling of render order
     // Array will be sorted by, the entity with the lowest worldY comes in index 0
     // Then it will draw entities in order of their worldY value
@@ -125,6 +128,7 @@ public class GamePanel extends JPanel implements Runnable{
     public void setupGame(){
         aSetter.setObject();
         aSetter.setNPC();
+        aSetter.setMonster();
         gameState = titleState;
     }
 
@@ -188,6 +192,12 @@ public class GamePanel extends JPanel implements Runnable{
                     npc[i].update();
                 }
             }
+            // Monster
+            for(int i = 0; i < monster.length; i++){
+                if(monster[i] != null){
+                    monster[i].update();
+                }
+            }
         }
         if(gameState == pauseState){
             // in progress atm!
@@ -228,6 +238,12 @@ public class GamePanel extends JPanel implements Runnable{
             for(int i = 0; i < obj.length; i++){
                 if(obj[i] != null){
                     entityList.add(obj[i]);
+                }
+            }
+
+            for(int i = 0; i < monster.length; i++){
+                if(monster[i] != null){
+                    entityList.add(monster[i]);
                 }
             }
 

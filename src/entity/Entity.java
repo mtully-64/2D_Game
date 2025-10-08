@@ -34,6 +34,13 @@ public class Entity {
     // Integer to slow down the direction change of the NPC
     public int actionLockCounter = 0;
 
+    // I have to make invincible time, once hit by a monster
+    // This time means the player can not be injured in the time period after being initially hit by a monster
+    // This is because the update is called at 60 times per second
+    // So when the player touches the monster they will lose the intended health value but at a rate of every frame (too fast so he is dead instantly)
+    public boolean invincible = false;
+    public int invincibleCounter = 0;
+
     // Array for string dialogues
     String[] dialogues = new String[20];
 
@@ -43,6 +50,9 @@ public class Entity {
     public BufferedImage image, image2, image3;
     public String name;
     public boolean collision = false;
+
+    // I cannot have the NPC giving damage to player
+    public int type; // This would be like {player: 0, npc: 1, monster: 2}
 
     // Character status - shared by both player and monsters
     public int maxLife;
@@ -86,7 +96,18 @@ public class Entity {
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
-        gp.cChecker.checkPlayer(this);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.monster); // Collisions can happen between Monsters and NPCs
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
+
+        // Entity of type 2 means that it can cause damage to Player, unlike an NPC
+        if(this.type == 2 && contactPlayer == true){
+            if(gp.player.invincible == false){
+                // Give damage
+                gp.player.life -= 1;
+                gp.player.invincible = true;
+            }
+        }
 
         // If the collision is false, the player can move
         if(!collisionOn) {
