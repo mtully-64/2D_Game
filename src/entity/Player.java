@@ -73,7 +73,7 @@ public class Player extends Entity{
     public void update(){
 
         // Statement to stop the sprite moving between png 1 and 2, when not moving
-        if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed){
+        if(keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed || keyH.enterPressed){
 
             // Update player position
             if(keyH.upPressed){
@@ -106,14 +106,11 @@ public class Player extends Entity{
             // Call a method to receive player damage when touch monster
             contactMonster(monsterIndex);
 
-
             // Check the event
             gp.eHandler.checkEvent();
 
-            gp.keyH.enterPressed = false;
-
             // If the collision is false, the player can move
-            if(!collisionOn) {
+            if(!collisionOn && !keyH.enterPressed) {
                 switch(direction){
                     case "up":
                         worldY -= speed;
@@ -132,6 +129,8 @@ public class Player extends Entity{
                         break;
                 }
             }
+
+            gp.keyH.enterPressed = false;
 
             // This is to alternate the walking of the player
             spriteCounter++;
