@@ -12,47 +12,58 @@ public class Entity {
 
     GamePanel gp;
 
-    // Location and speed information about the character
-    public int worldX, worldY;
-    public int speed;
-
     // A BufferedImage describes an Image with an accessible buffer of image data
-    // We will use this to call our stored image files (player walking)
+    // We will use this to call our stored image files
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
-    public String direction = "down";
+    public BufferedImage attackUp1, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
 
-    // This is to make the sprite look as if he is walking (move from up1 to up2 etc.)
-    // Therefore, we make a counter and record of which to use
-    public int spriteCounter = 0;
-    public int spriteNum = 1;
+    // Entity parameters
+    public BufferedImage image, image2, image3;
 
     // Setting the solid area of the sprite that actually does collision with tiles/objects
     public Rectangle solidArea = new Rectangle(0, 0, 48, 48);
+    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
     public int solidAreaDefaultX, solidAreaDefaultY;
-    public boolean collisionOn = false;
+    public boolean collision = false;
 
-    // Integer to slow down the direction change of the NPC
-    public int actionLockCounter = 0;
+    // Array for string dialogues
+    String[] dialogues = new String[20];
+
+    //**** STATE ****
+
+    // Location information about the character
+    public int worldX, worldY;
+    public String direction = "down";
+    // This is to make the sprite look as if he is walking (move from up1 to up2 etc.)
+    // Therefore, we make a counter and record of which to use
+    public int spriteNum = 1;
+    int dialogueIndex = 0;
+    public boolean collisionOn = false;
 
     // I have to make invincible time, once hit by a monster
     // This time means the player can not be injured in the time period after being initially hit by a monster
     // This is because the update is called at 60 times per second
     // So when the player touches the monster they will lose the intended health value but at a rate of every frame (too fast so he is dead instantly)
     public boolean invincible = false;
+
+    // Boolean to trigger if character is in attacking animation via Enter key
+    public boolean attacking = false;
+
+    //**** COUNTERS ****
+
+    // Used alongside spriteNum
+    public int spriteCounter = 0;
+    // Integer to slow down the direction change of the NPC
+    public int actionLockCounter = 0;
     public int invincibleCounter = 0;
 
-    // Array for string dialogues
-    String[] dialogues = new String[20];
-
-    int dialogueIndex = 0;
-
-    // Entity parameters
-    public BufferedImage image, image2, image3;
-    public String name;
-    public boolean collision = false;
+    //**** CHARACTER ATTRIBUTES ****
 
     // I cannot have the NPC giving damage to player
     public int type; // This would be like {player: 0, npc: 1, monster: 2}
+
+    public String name;
+    public int speed;
 
     // Character status - shared by both player and monsters
     public int maxLife;
@@ -140,6 +151,14 @@ public class Entity {
             }
             spriteCounter = 0;
         }
+
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 40){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     public void draw(Graphics2D g2){
@@ -188,17 +207,24 @@ public class Entity {
                     break;
             }
 
+            if(invincible == true){
+                // Make a player half transparent when he is "invincible" or just been hit
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+            }
+
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         }
     }
 
-    public BufferedImage setup(String imagePath){
+    public BufferedImage setup(String imagePath, int width, int height){
         UtilityTool uTool = new UtilityTool();
         BufferedImage image = null;
 
         try{
             image = ImageIO.read(getClass().getResourceAsStream(imagePath + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            image = uTool.scaleImage(image, width, height);
         } catch (IOException e){
             e.printStackTrace();
         }
