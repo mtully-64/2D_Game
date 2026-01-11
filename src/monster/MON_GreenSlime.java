@@ -66,4 +66,12 @@ public class MON_GreenSlime extends Entity {
             actionLockCounter = 0;
         }
     }
+
+    public void damageReaction(){
+        actionLockCounter = 0;
+
+        // Move in the opposite direction of the player
+        // Later on this can be varied based on the type of the monster!
+        direction = gp.player.direction;
+    }
 }

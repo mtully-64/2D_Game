@@ -49,6 +49,13 @@ public class Entity {
     // Boolean to trigger if character is in attacking animation via Enter key
     public boolean attacking = false;
 
+    // Death effect on death, instead of just vanishing
+    public boolean alive = true;
+    public boolean dying = false;
+
+    // Visibility of entity health bar only when interacted with
+    public boolean hpBarOn = false;
+
     //**** COUNTERS ****
 
     // Used alongside spriteNum
@@ -56,6 +63,10 @@ public class Entity {
     // Integer to slow down the direction change of the NPC
     public int actionLockCounter = 0;
     public int invincibleCounter = 0;
+    // Used for death effect
+    int dyingCounter = 0;
+    // Used for health bar visibility duration
+    int hpBarCounter = 0;
 
     //**** CHARACTER ATTRIBUTES ****
 
@@ -76,6 +87,9 @@ public class Entity {
 
     // Carried via inheritance in Java
     public void setAction(){}
+
+    // Monsters react to damage, carried via inheritance
+    public void damageReaction(){}
 
     public void speak(){
         // Loop through a dialogue string list
@@ -115,6 +129,7 @@ public class Entity {
         if(this.type == 2 && contactPlayer == true){
             if(gp.player.invincible == false){
                 // Give damage
+                gp.playSE(6);
                 gp.player.life -= 1;
                 gp.player.invincible = true;
             }
@@ -207,15 +222,84 @@ public class Entity {
                     break;
             }
 
+            // Monster health bar
+            if (type == 2 && hpBarOn == true) {
+                double oneScale = (double)gp.tileSize/maxLife;
+                double hpBarValue = oneScale*life;
+
+                g2.setColor(new Color(35, 35, 35));
+                g2.fillRect(screenX - 1, screenY - 16, gp.tileSize + 2, 12);
+
+                g2.setColor(new Color(255, 0, 30));
+                g2.fillRect(screenX, screenY - 15, (int)hpBarValue, 10);
+
+                hpBarCounter++;
+
+                // Disappear after 10 seconds
+                if(hpBarCounter > 600){
+                    hpBarCounter = 0;
+                    hpBarOn = false;
+                }
+            }
+
             if(invincible == true){
+                // Display the health bar
+                hpBarOn = true;
+                hpBarCounter = 0;
+
                 // Make a player half transparent when he is "invincible" or just been hit
-                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+                changeAlpha(g2, 0.4f);
+            }
+
+            if(dying == true){
+                dyingAnimation(g2);
             }
 
             g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            changeAlpha(g2, 1f);
         }
+    }
+
+    // Method for an animation of the entity dying - blinking effect
+    public void dyingAnimation(Graphics2D g2){
+        dyingCounter++;
+
+        // Constant for animation timing
+        int i = 5;
+
+        if(dyingCounter <= i){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i && dyingCounter >= i*2){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*2 && dyingCounter >= i*3){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*3 && dyingCounter >= i*4){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*4 && dyingCounter >= i*5){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*5 && dyingCounter >= i*6){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*6 && dyingCounter >= i*7){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*7 && dyingCounter >= i*8){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*8){
+            dying = false;
+            alive = false;
+        }
+    }
+
+    public void changeAlpha(Graphics2D g2, float alphaValue){
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
     }
 
     public BufferedImage setup(String imagePath, int width, int height){
