@@ -3,6 +3,8 @@ package entity;
 import main.GamePanel;
 import main.KeyHandler;
 import main.UtilityTool;
+import object.OBJ_Shield_Wood;
+import object.OBJ_Sword_Normal;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,12 +17,15 @@ public class Player extends Entity{
     KeyHandler  keyH;
 
     // These indicate where we draw the player on the screen
-    //  Remember, that the map moves not the player, when wasd is pressed
+    // Remember, that the map moves not the player, when wasd is pressed
     public final int screenX;
     public final int screenY;
 
     // Fixing the character standing bug
     int standCounter = 0;
+
+    // Boolean to prevent player interaction and sword swing at the same time
+    public boolean attackCanceled = false;
 
     public Player(GamePanel gp, KeyHandler keyH){
         // Call the constructor of the super class into the class
@@ -58,8 +63,31 @@ public class Player extends Entity{
         direction = "down";
 
         // Player status
+        level = 1;
         maxLife = 6; // 3 hearts is 6 lives, 1 life is half a heart
         life = maxLife;
+        strength = 1;
+        dexterity = 1;
+        exp = 1;
+        nextLevelExp = 5;
+        coin = 0;
+
+        // Weapons that you start with
+        currentWeapon = new OBJ_Sword_Normal(gp);
+        currentShield = new OBJ_Shield_Wood(gp);
+
+        attack = getAttack(); // the total attack value
+        defence = getDefence(); // the total defence value
+    }
+
+    // Method to return attack
+    public int getAttack(){
+        return attack = strength * currentWeapon.attackValue;
+    }
+
+    // Method to return defence
+    public int getDefence(){
+        return defence = dexterity * currentShield.defenceValue;
     }
 
     // Method to load in images of player walking (the sprite)
@@ -150,6 +178,13 @@ public class Player extends Entity{
                 }
             }
 
+            if(keyH.enterPressed == true && !attackCanceled){
+                gp.playSE(7);
+                attacking = true;
+                spriteCounter = 0;
+            }
+
+            attackCanceled = false;
             gp.keyH.enterPressed = false;
 
             // This is to alternate the walking of the player
@@ -255,12 +290,9 @@ public class Player extends Entity{
         // Only open the dialogue window when you press the Enter key
         if(gp.keyH.enterPressed == true){
             if(i != 999){
+                attackCanceled = true;
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
-            }
-            else {
-                gp.playSE(7);
-                attacking = true;
             }
         }
     }
@@ -374,13 +406,13 @@ public class Player extends Entity{
 
         if(invincible == true){
             // Make a player half transparent when he is "invincible" or just been hit
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+            changeAlpha(g2, 0.3f);
         }
 
         // Draw the image to the screen
         g2.drawImage(image, tempScreenX, tempScreenY, null); // The image observer is null
 
         // Now you have to reset the transparency
-        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // Without it fucked my UI text
+        changeAlpha(g2, 1f); // Without it fucked my UI text
     }
 }

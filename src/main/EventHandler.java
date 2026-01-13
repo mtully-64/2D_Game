@@ -92,7 +92,7 @@ public class EventHandler {
     // When the player falls into a 'pit', they will lose 1 life
     public void damagePit(int col, int row, int gameState){
         gp.gameState = gameState;
-
+        gp.playSE(6);
         gp.ui.currentDialogue = "You have fallen into a pit!";
         gp.player.life -= 1;
         canTouchEvent = false;
@@ -102,7 +102,9 @@ public class EventHandler {
     public void healingPool(int row, int col, int gameState){
         if(gp.keyH.enterPressed == true){
             gp.gameState = gameState;
-            gp.ui.currentDialogue = "You drank water, your life has been re-healed";
+            gp.player.attackCanceled = true;
+            gp.playSE(2);
+            gp.ui.currentDialogue = "You drank water,\nYour life has been re-healed";
             gp.player.life = gp.player.maxLife;
         }
     }

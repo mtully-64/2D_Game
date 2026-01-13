@@ -80,6 +80,22 @@ public class Entity {
     public int maxLife;
     public int life;
 
+    // Character attributes
+    public int level;
+    public int strength;
+    public int dexterity;
+    public int attack;
+    public int defence;
+    public int exp;
+    public int nextLevelExp;
+    public int coin;
+    public Entity currentWeapon;
+    public Entity currentShield;
+
+    // Item attributes
+    public int attackValue;
+    public int defenceValue;
+
     public Entity(GamePanel gp){
         // This is an abstract class, received from the Player class
         this.gp = gp;
