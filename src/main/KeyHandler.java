@@ -112,6 +112,10 @@ public class KeyHandler implements KeyListener {
                 checkNerdStats = false;
             }
         }
+        // Function to refresh/load the updated map, while game is live
+        if(code == KeyEvent.VK_R){
+            gp.tileM.loadMap("/maps/world03.txt");
+        }
     }
 
     public void pauseState(int code){
