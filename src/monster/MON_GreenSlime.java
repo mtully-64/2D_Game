@@ -18,6 +18,9 @@ public class MON_GreenSlime extends Entity {
         speed = 1; // Slow speed for slime
         maxLife = 4;
         life = maxLife;
+        attack = 5;
+        defence = 0;
+        exp = 2; // experience given when you kill this monster
 
         solidArea.x = 3;
         solidArea.y = 18;
@@ -56,7 +59,7 @@ public class MON_GreenSlime extends Entity {
             if (i > 25 && i <= 50) {
                 direction = "down";
             }
-            if (i > 50 && i < 75) {
+            if (i > 50 && i <= 75) {
                 direction = "left";
             }
             if (i > 75 && i <= 100) {

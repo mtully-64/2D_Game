@@ -82,12 +82,12 @@ public class Player extends Entity{
 
     // Method to return attack
     public int getAttack(){
-        return attack = strength * currentWeapon.attackValue;
+        return strength * currentWeapon.attackValue;
     }
 
     // Method to return defence
     public int getDefence(){
-        return defence = dexterity * currentShield.defenceValue;
+        return dexterity * currentShield.defenceValue;
     }
 
     // Method to load in images of player walking (the sprite)
@@ -236,8 +236,8 @@ public class Player extends Entity{
             // Save the current worldX, worldY and solidArea
             int currentWorldX = worldX;
             int currentWorldY = worldY;
-            int solidAreaWidth = solidArea.height;
-            int solidAreaHeight = solidArea.width;
+            int solidAreaWidth = solidArea.width;
+            int solidAreaHeight = solidArea.height;
 
             // Adjust the player's worldX and worldY for the attack
             switch (direction){
@@ -302,7 +302,12 @@ public class Player extends Entity{
         if(i != 999){
             if(invincible == false){
                 gp.playSE(6);
-                life -= 1;
+
+                int damage = gp.monster[i].attack - getDefence();
+                if(damage < 0){
+                    damage = 0;
+                }
+                life -= damage;
                 invincible = true;
             }
         }
@@ -313,15 +318,44 @@ public class Player extends Entity{
         if(i != 999){
             if(gp.monster[i].invincible == false){
                 gp.playSE(5);
-                gp.monster[i].life -= 1;
+
+                int damage = getAttack() - gp.monster[i].defence;
+                if(damage < 0){
+                    damage = 0;
+                }
+                gp.monster[i].life -= damage;
+                gp.ui.addMessage(damage + " damage!");
+
                 gp.monster[i].invincible = true;
                 gp.monster[i].damageReaction();
 
                 // Monster dies
                 if(gp.monster[i].life <= 0){
                     gp.monster[i].dying = true;
+                    gp.ui.addMessage("Killed the " + gp.monster[i].name + "!");
+                    gp.ui.addMessage("Exp + " + gp.monster[i].exp);
+                    exp += gp.monster[i].exp;
+                    checkLevelUp();
                 }
             }
+        }
+    }
+
+    // This method will be used to check player's experience quantity and trigger level up
+    public void checkLevelUp(){
+        if(exp >= nextLevelExp){
+            level++;
+            nextLevelExp = nextLevelExp*2; // for now just double on each level, the required exp
+            maxLife += 2;
+            strength++;
+            dexterity++;
+            attack = getAttack();
+            defence = getDefence();
+
+            gp.playSE(8);
+            gp.gameState = gp.dialogueState;
+            gp.ui.currentDialogue = "You are level " + level + " now!\n"
+                    + "You feel stronger!";
         }
     }
 

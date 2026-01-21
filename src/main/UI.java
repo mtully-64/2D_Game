@@ -6,6 +6,7 @@ import object.OBJ_Heart;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 // Handles all on-screen User Interface
 public class UI {
@@ -15,8 +16,8 @@ public class UI {
     Font arial_30, arial_80B;
     BufferedImage heart_full, heart_half, heart_blank;
     public boolean messageOn = false;
-    public String message = "";
-    int messageCounter = 0;
+    ArrayList<String> message = new ArrayList<>();
+    ArrayList<Integer> messageCounter = new ArrayList<>();
     public boolean gameFinished = false;
     public String currentDialogue = "";
     public int commandNum = 0;
@@ -38,9 +39,9 @@ public class UI {
         heart_blank = heart.image3;
     }
 
-    public void showMessage(String text){
-        message = text;
-        messageOn = true;
+    public void addMessage(String text){
+        message.add(text);
+        messageCounter.add(0);
     }
 
     public void draw(Graphics2D g2){
@@ -57,6 +58,7 @@ public class UI {
         // Play state
         if(gp.gameState == gp.playState){
             drawPlayerLife();
+            drawMessage();
         }
 
         // Pause state
@@ -78,7 +80,6 @@ public class UI {
     }
 
     public void drawPlayerLife(){
-
         // Where I will display the heart image
         int x = gp.tileSize/2;
         int y = gp.tileSize/2;
@@ -105,6 +106,36 @@ public class UI {
             }
             i++;
             x += gp.tileSize;
+        }
+    }
+
+    public void drawMessage(){
+        int messageX = gp.tileSize;
+        int messageY = gp.tileSize*4;
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
+
+        for(int i = 0; i < message.size(); i++){
+            // If the message is not null, so there is no null pointer error
+            if(message.get(i) != null){
+                // Black text shadow
+                g2.setColor(Color.black);
+                g2.drawString(message.get(i), messageX+2, messageY+2);
+
+                // White text
+                g2.setColor(Color.white);
+                g2.drawString(message.get(i), messageX, messageY);
+
+                // Since we are using an Array List
+                int counter = messageCounter.get(i) + 1;
+                messageCounter.set(i, counter);
+                messageY += 50;
+
+                // Message to show and be removed after 3 seconds
+                if(messageCounter.get(i) > 180){
+                    message.remove(i);
+                    messageCounter.remove(i);
+                }
+            }
         }
     }
 

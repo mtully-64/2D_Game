@@ -54,7 +54,7 @@ public class EventHandler {
 
             if(hit(23, 19, "any") == true){
                 // Another damage pit
-                damagePit(27, 16, gp.dialogueState);
+                damagePit(23, 19, gp.dialogueState);
             }
 
             if(hit(23, 12, "up") == true){
@@ -99,13 +99,14 @@ public class EventHandler {
     }
 
     // When the player hits enter at a water body, they will heal in life
-    public void healingPool(int row, int col, int gameState){
+    public void healingPool(int col, int row, int gameState){
         if(gp.keyH.enterPressed == true){
             gp.gameState = gameState;
             gp.player.attackCanceled = true;
             gp.playSE(2);
             gp.ui.currentDialogue = "You drank water,\nYour life has been re-healed";
             gp.player.life = gp.player.maxLife;
+            gp.aSetter.setMonster();
         }
     }
 }

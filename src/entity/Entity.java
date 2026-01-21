@@ -109,7 +109,7 @@ public class Entity {
 
     public void speak(){
         // Loop through a dialogue string list
-        if(dialogues[dialogueIndex] == null) {
+        if(dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
             dialogueIndex = 0;
         }
         gp.ui.currentDialogue = dialogues[dialogueIndex];
@@ -134,6 +134,7 @@ public class Entity {
 
     public void update(){
         setAction();
+
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
@@ -146,7 +147,12 @@ public class Entity {
             if(gp.player.invincible == false){
                 // Give damage
                 gp.playSE(6);
-                gp.player.life -= 1;
+
+                int damage = attack - gp.player.getDefence();
+                if(damage < 0){
+                    damage = 0;
+                }
+                gp.player.life -= damage;
                 gp.player.invincible = true;
             }
         }
